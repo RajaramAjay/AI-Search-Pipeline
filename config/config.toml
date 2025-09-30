@@ -1,0 +1,17 @@
+[faiss]
+path ="/Users/ajayrajaram/Desktop/Ajju/Ajay Projects/SearchEngine/DATA_INGESTION/database/faiss_0812"
+
+[LLMmodel]
+model = 'llama3.2:1b'
+
+[embeddings]
+model_path = "./models/sentence_tranformer_model"
+encoder_model ="./models/ms-marco-MiniLM-L-6-v2"
+
+[logging]
+log_dir = "logs"
+log_level = "INFO"
+log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+#llama3.2:1b
+#llama3.1:latest

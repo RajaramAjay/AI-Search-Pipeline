@@ -1,0 +1,564 @@
+// templates/index.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEARCH ENGINE</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a5276;
+            --secondary-color: #266c9b;
+            --accent-color: #3498db;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-main);
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+        
+        .search-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .search-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .search-button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .search-button i {
+            font-size: 1.2rem;
+        }
+        
+        .results-section {
+            margin-top: 3rem;
+            display: none;
+        }
+        
+        .results-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .answer-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .answer-title {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .answer-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .sources-section {
+            margin-top: 2rem;
+        }
+        
+        .sources-title {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sources-list {
+            list-style-type: none;
+        }
+        
+        .source-item {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .source-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .source-name {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+        
+        .source-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .source-detail {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        .loading-text {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            text-align: center;
+            padding: 1rem;
+            background-color: #fadbd8;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .error-details {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            max-height: 100px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .debug-toggle {
+            color: var(--accent-color);
+            cursor: pointer;
+            margin-top: 5px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .search-section, .answer-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-search"></i>
+                    SEARCH ENGINE
+                </div>
+                <p class="tagline">Access information instantly with our powerful Database search engine</p>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <section class="search-section">
+            <form class="search-form" id="searchForm">
+                <div class="search-box">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Enter your question or search term..." required>
+                </div>
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i>
+                    Search
+                </button>
+            </form>
+            <div class="error-message" id="errorMessage"></div>
+            <div class="error-details" id="errorDetails"></div>
+        </section>
+        
+        <section class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2>Search Results</h2>
+            </div>
+            
+            <div class="answer-card">
+                <h3 class="answer-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Answer
+                </h3>
+                <div class="answer-content" id="answerContent">
+                    <!-- Answer content will be populated here -->
+                </div>
+            </div>
+            
+            <div class="sources-section">
+                <h3 class="sources-title">
+                    <i class="fas fa-book"></i>
+                    Sources
+                </h3>
+                <ul class="sources-list" id="sourcesList">
+                    <!-- Source items will be populated here -->
+                </ul>
+            </div>
+        </section>
+    </main>
+    
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p class="loading-text">Searching for the best answer...</p>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <p>© 2025 SEARCH ENGINE. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.getElementById('searchForm');
+            const searchInput = document.getElementById('searchInput');
+            const resultsSection = document.getElementById('resultsSection');
+            const answerContent = document.getElementById('answerContent');
+            const sourcesList = document.getElementById('sourcesList');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const errorMessage = document.getElementById('errorMessage');
+            const errorDetails = document.getElementById('errorDetails');
+            
+            searchForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const query = searchInput.value.trim();
+                if (!query) return;
+                
+                // Show loading overlay
+                loadingOverlay.style.display = 'flex';
+                errorMessage.style.display = 'none';
+                errorDetails.style.display = 'none';
+                
+                // Send the query to the backend
+                fetch('/response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(query)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => {
+                            throw new Error(data.error || 'Network response was not ok');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Hide loading overlay
+                    loadingOverlay.style.display = 'none';
+                    
+                    // Check if we have an answer
+                    if (!data.answer) {
+                        throw new Error('No answer received from the server');
+                    }
+                    
+                    // Display answer
+                    answerContent.innerHTML = formatAnswer(data.answer);
+                    
+                    // Clear previous sources
+                    sourcesList.innerHTML = '';
+                    
+                    // Add sources if available
+                    if (data.sources && data.sources.length > 0) {
+                        data.sources.forEach(source => {
+                        try {
+                            const sourceItem = document.createElement('li');
+                            sourceItem.className = 'source-item';
+
+                            let sourceHTML = '';
+                            let displayName = 'Unnamed Source';
+
+                            // Prefer URL as clickable link
+                            if (source?.url) {
+                                displayName = `<a href="${source.url}" target="_blank">${source.url}</a>`;
+                            } else if (source?.source) {
+                                displayName = source.source;
+                            }
+
+                            sourceHTML += `<div class="source-name">${displayName}</div>`;
+                            sourceHTML += '<div class="source-details">';
+
+                            // Show page number if present
+                            if (source?.page_number !== undefined) {
+                                sourceHTML += `
+                                    <span class="source-detail">
+                                        <i class="fas fa-file-alt"></i>
+                                        Page: ${source.page_number}
+                                    </span>
+                                `;
+                            }
+
+                            // Show relevance if present
+                            //if (source?.relevance !== undefined) {
+                               // const score = parseFloat(source.relevance).toFixed(2);
+                               // sourceHTML += `
+                                  //  <span class="source-detail">
+                                  //      <i class="fas fa-chart-bar"></i>
+                                     //   Relevance: ${score}
+                                  //  </span>
+                               // `;
+                            //}
+
+                            sourceHTML += '</div>';
+                            sourceItem.innerHTML = sourceHTML;
+                            sourcesList.appendChild(sourceItem);
+
+                        } catch (err) {
+                            console.error('Error processing source:', err);
+                            const errorItem = document.createElement('li');
+                            errorItem.className = 'source-item';
+                            errorItem.innerHTML = '<div class="source-name">Source data unavailable</div>';
+                            sourcesList.appendChild(errorItem);
+                        }
+                    });
+
+
+                    } else {
+                        sourcesList.innerHTML = '<li class="no-results">No sources available for this query.</li>';
+                    }
+                    
+                    // Show results section
+                    resultsSection.style.display = 'block';
+                    
+                    // Scroll to results
+                    resultsSection.scrollIntoView({ behavior: 'smooth' });
+                })
+                .catch(error => {
+                    // Hide loading overlay
+                    loadingOverlay.style.display = 'none';
+                    
+                    // Show error message with specific handling for 'source' error
+                    let errorText = 'An error occurred while processing your request.';
+                    
+                    if (error.message && error.message.includes('source')) {
+                        errorText = 'Error processing sources. The system encountered an issue with the document metadata.';
+                        
+                        // Show error details for developers
+                        errorDetails.textContent = `Technical details: ${error.message}`;
+                        errorDetails.style.display = 'block';
+                        
+                        // Still try to show results if we have an answer
+                        tryToShowPartialResults();
+                    } else {
+                        errorText = `Error: ${error.message || 'Unknown error'}`;
+                    }
+                    
+                    errorMessage.innerHTML = errorText + '<span class="debug-toggle" id="toggleDetails">Show technical details</span>';
+                    errorMessage.style.display = 'block';
+                    
+                    // Add toggle functionality for error details
+                    document.getElementById('toggleDetails')?.addEventListener('click', function() {
+                        if (errorDetails.style.display === 'none') {
+                            errorDetails.style.display = 'block';
+                            this.textContent = 'Hide technical details';
+                        } else {
+                            errorDetails.style.display = 'none';
+                            this.textContent = 'Show technical details';
+                        }
+                    });
+                    
+                    console.error('Error:', error);
+                });
+            });
+            
+            // Function to try to show partial results if answer is available but sources failed
+            function tryToShowPartialResults() {
+                // We could implement logic here to show partial results
+                // This would require backend changes to return the answer even if sources processing fails
+            }
+            
+            // Function to format the answer text
+            function formatAnswer(text) {
+                if (!text) return 'No answer available.';
+                
+                // Replace newlines with HTML line breaks
+                text = text.replace(/\n/g, '<br>');
+                
+                // Add paragraph tags for better readability
+                if (!text.startsWith('<p>')) {
+                    text = '<p>' + text + '</p>';
+                }
+                
+                return text;
+            }
+        });
+
+
+    
+    </script>
+</body>
+</html>
