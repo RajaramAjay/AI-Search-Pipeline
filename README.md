@@ -104,8 +104,5 @@ The **AI Search Pipeline** is an enterprise-grade solution designed to empower b
 ## Contributing
 Contributions are welcome! Fork the repository, create a feature branch, and submit a pull request with tests and documentation. See `CONTRIBUTING.md` (to be added) for guidelines.
 
-## License
-MIT License
-
 ## Contact
-For enterprise inquiries or support, open an issue on GitHub or contact [your-email@example.com].
+For enterprise inquiries or support, open an issue on GitHub or contact [ajay.rajaram99@gmail.com].
